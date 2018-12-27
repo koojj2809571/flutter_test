@@ -20,7 +20,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      routes: {"new_page" : (context) => NewRoute(), "tip_page" : (context) => EchoRoute("无法计数")},
+      routes: {
+        "new_page" : (context) => NewRoute(),
+        "tip_page" : (context) => EchoRoute("无法计数"),
+        "stateless_widget_learning" : (context) => Echo(text: "你好世界！！！")
+      },
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -65,6 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    final _startNewPage = "new_page";
+    final _startTipPage = "tip_page";
+    final _startStatelessWidgetLearningPage = "stateless_widget_learning";
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -102,14 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
               child: new Text("点击打开第二个页面"),
               textColor: Colors.blue,
               onPressed: () {
-                Navigator.pushNamed(context, "new_page");
+                Navigator.pushNamed(context, _startNewPage);
               }
             ),
             FlatButton(
                 child: new Text("点击打开计数页面"),
                 textColor: Colors.blue,
                 onPressed: () {
-                Navigator.pushNamed(context, "tip_page");
+                  Navigator.pushNamed(context, _startTipPage);
                 }
             ),
             FlatButton(
@@ -120,6 +127,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     new MaterialPageRoute(builder: (context) => EchoRoute("$_counter"))
                 );
+                }
+            ),
+            FlatButton(
+                child: new Text("StatelessWidget学习"),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.pushNamed(context,_startStatelessWidgetLearningPage);
+                }
+            ),
+            FlatButton(
+                child: new Text("StatefulWidget学习"),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(builder: (context) => CounterWidget())
+                  );
                 }
             )
           ],
@@ -157,6 +181,83 @@ class EchoRoute extends StatelessWidget{
       appBar: AppBar(title: Text("显示计数的新页面")),
       body: Center(child: Text("上一个页面被点击了$tip次"))
     );
+  }
+
+}
+
+class Echo extends StatelessWidget {
+  const Echo({Key key,@required this.text,this.backgroundColor:Colors.grey}):super(key:key);
+  final String text;
+  final Color backgroundColor;
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: backgroundColor,
+        child: Text(text)
+      )
+    );
+  }
+}
+
+class CounterWidget extends StatefulWidget{
+  const CounterWidget({Key key, this.initValue : 0});
+  final int initValue;
+  @override
+  State<StatefulWidget> createState() => new _CounterState();
+}
+
+class _CounterState extends State<CounterWidget>{
+  int _counter;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _counter = widget.initValue;
+    print("initState");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("build");
+    return Center(
+        child: FlatButton(
+          onPressed: () => setState(() => ++_counter),
+          textColor: Colors.white,
+          child: Text('$_counter',)
+        )
+    );
+  }
+
+  @override
+  void didUpdateWidget(CounterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget");
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    print("deactive");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    print("reassemble");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies");
   }
 
 }
