@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() => runApp(new MainWidget());
 
@@ -13,12 +14,33 @@ class MainWidget extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.blue),
         routes: {
           "self_manage": (context) => new TapBoxA(),
-          "super_widget_manage": (context) => new TapBoxB(),
-          "mix_manage": (context) => new TapBoxC(),
+          "super_widget_manage": (context) => new ParentWidget(),
+          "mix_manage": (context) => new ParentWidgetC(),
+          "simple_cupertino": (context) => new CupertinoTestRoute(),
         },
         home: HomePage(title: title));
   }
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class CupertinoTestRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text("IOS风格Demo"),
+        ),
+        child: Center(
+          child: CupertinoButton(
+            color: CupertinoColors.activeBlue,
+            child: Text("Press"),
+            onPressed: (){},
+          ),
+        ));
+  }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -32,6 +54,7 @@ class HomePageState extends State<HomePage> {
   final String selfManage = "self_manage";
   final String superManage = "super_widget_manage";
   final String mixManage = "mix_manage";
+  final String cupertinoDemo = "simple_cupertino";
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +63,7 @@ class HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+//        crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             FlatButton(
               child: Text("Widget管理自身状态"),
@@ -62,6 +86,13 @@ class HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, mixManage);
               },
             ),
+            FlatButton(
+              child: Text("IOS风格Demo"),
+              textColor: Colors.black,
+              onPressed: () {
+                Navigator.pushNamed(context, cupertinoDemo);
+              },
+            ),
           ],
         ),
       ),
@@ -69,8 +100,11 @@ class HomePageState extends State<HomePage> {
   }
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 class TapBoxA extends StatefulWidget {
-  TapBoxA({Key key}):super(key:key);
+  TapBoxA({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => new TapBoxAState();
 }
@@ -78,56 +112,173 @@ class TapBoxA extends StatefulWidget {
 class TapBoxAState extends State<TapBoxA> {
   bool _active = false;
 
-  void _handleTap(){
+  void _handleTap() {
     setState(() {
       _active = !_active;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _handleTap,
       child: Container(
-        width: 10.0,
-        height: 10.0,
         child: Center(
-          child: Text(
-            _active ? 'Active' : 'Inactive',
-            style: TextStyle(fontSize: 32.0, color: Colors.white)
+          child: Text(_active ? 'Active' : 'Inactive',
+              style: TextStyle(fontSize: 32.0, color: Colors.white)),
+        ),
+        width: 200.0,
+        height: 200.0,
+        decoration: BoxDecoration(
+            color: _active ? Colors.lightGreen[700] : Colors.grey[600]),
+      ),
+    );
+  }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class ParentWidget extends StatefulWidget {
+  ParentWidget({Key key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => new _ParentWidgetState();
+}
+
+class _ParentWidgetState extends State<ParentWidget> {
+  bool _active = false;
+
+  void _handleTapBoxChanged(bool newValue) {
+    setState(() {
+      _active = newValue;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+        child: new TapBoxB(
+      active: _active,
+      onChanged: _handleTapBoxChanged,
+    ));
+  }
+}
+
+class TapBoxB extends StatelessWidget {
+  TapBoxB({Key key, this.active: false, @required this.onChanged})
+      : super(key: key);
+
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  void _handleTap() {
+    onChanged(!active);
+  }
+
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+      onTap: _handleTap,
+      child: new Container(
+        child: new Center(
+          child: new Text(
+            active ? 'Active' : 'Inactive',
+            style: new TextStyle(fontSize: 32.0, color: Colors.white),
           ),
         ),
-        decoration: BoxDecoration(
-          color: _active ? Colors.lightGreen[700] : Colors.grey[600]
+        width: 200.0,
+        height: 200.0,
+        decoration: new BoxDecoration(
+          color: active ? Colors.lightGreen[700] : Colors.grey[600],
         ),
       ),
     );
   }
 }
 
-class TapBoxB extends StatefulWidget {
-  TapBoxB({Key key}):super(key:key);
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class ParentWidgetC extends StatefulWidget {
+  ParentWidgetC({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => new TapBoxBState();
+  State<StatefulWidget> createState() => new _ParentWidgetCState();
 }
 
-class TapBoxBState extends State<TapBoxB> {
+class _ParentWidgetCState extends State<ParentWidgetC> {
+  bool _active = false;
+
+  void _handleTapBoxChanged(bool newValue) {
+    setState(() {
+      _active = newValue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return new TapBoxC(
+      active: _active,
+      onChanged: _handleTapBoxChanged,
+    );
   }
 }
 
 class TapBoxC extends StatefulWidget {
-  TapBoxC({Key key}):super(key:key);
+  TapBoxC({Key key, this.active, this.onChanged}) : super(key: key);
+
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
   @override
-  State<StatefulWidget> createState() => new TapBoxCState();
+  State<StatefulWidget> createState() => new _TapBoxCState();
 }
 
-class TapBoxCState extends State<TapBoxC> {
+class _TapBoxCState extends State<TapBoxC> {
+  bool _highlight = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _highlight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _highlight = false;
+    });
+  }
+
+  void _handTap() {
+    widget.onChanged(!widget.active);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return new GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      onTap: _handTap,
+      child: new Container(
+        child: new Center(
+          child: new Text(
+            widget.active ? 'Active' : 'Inactive',
+            style: new TextStyle(fontSize: 32.0, color: Colors.white),
+          ),
+        ),
+        width: 200.0,
+        height: 200.0,
+        decoration: new BoxDecoration(
+            color: widget.active ? Colors.lightGreen[700] : Colors.grey[700],
+            border: _highlight
+                ? new Border.all(color: Colors.teal[700], width: 100.0)
+                : null),
+      ),
+    );
   }
 }
