@@ -34,7 +34,7 @@ class CatalogueHomePage extends StatelessWidget{
             child: new Row(
 
             ),
-          )
+          ),
         ],
       ),
     );
