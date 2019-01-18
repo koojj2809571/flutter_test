@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/js_pang/demo3/costum_route.dart';
 
 class FirstPage extends StatelessWidget{
   @override
@@ -11,9 +12,7 @@ class FirstPage extends StatelessWidget{
       body: Center(
         child: MaterialButton(
           onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-              return SecondPage();
-            }));
+            Navigator.of(context).push(CustomRoute(SecondPage()));
           },
           child: Icon(
             Icons.navigate_next,
