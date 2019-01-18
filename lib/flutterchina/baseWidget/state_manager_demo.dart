@@ -34,7 +34,7 @@ class CupertinoTestRoute extends StatelessWidget {
           child: CupertinoButton(
             color: CupertinoColors.activeBlue,
             child: Text("Press"),
-            onPressed: (){},
+            onPressed: () {},
           ),
         ));
   }
@@ -122,15 +122,16 @@ class TapBoxAState extends State<TapBoxA> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _handleTap,
-      child: Container(
-        child: Center(
+      child: Center(
+        child: Container(
+          alignment: Alignment.center,
           child: Text(_active ? 'Active' : 'Inactive',
               style: TextStyle(fontSize: 32.0, color: Colors.white)),
+          width: 200.0,
+          height: 200.0,
+          decoration: BoxDecoration(
+              color: _active ? Colors.lightGreen[700] : Colors.grey[600]),
         ),
-        width: 200.0,
-        height: 200.0,
-        decoration: BoxDecoration(
-            color: _active ? Colors.lightGreen[700] : Colors.grey[600]),
       ),
     );
   }
@@ -178,17 +179,18 @@ class TapBoxB extends StatelessWidget {
   Widget build(BuildContext context) {
     return new GestureDetector(
       onTap: _handleTap,
-      child: new Container(
-        child: new Center(
+      child: new Center(
+        child: new Container(
+          alignment: Alignment.center,
           child: new Text(
             active ? 'Active' : 'Inactive',
             style: new TextStyle(fontSize: 32.0, color: Colors.white),
           ),
-        ),
-        width: 200.0,
-        height: 200.0,
-        decoration: new BoxDecoration(
-          color: active ? Colors.lightGreen[700] : Colors.grey[600],
+          width: 200.0,
+          height: 200.0,
+          decoration: new BoxDecoration(
+            color: active ? Colors.lightGreen[700] : Colors.grey[600],
+          ),
         ),
       ),
     );
@@ -264,20 +266,21 @@ class _TapBoxCState extends State<TapBoxC> {
       onTapUp: _handleTapUp,
       onTapCancel: _handleTapCancel,
       onTap: _handTap,
-      child: new Container(
-        child: new Center(
+      child: new Center(
+        child: new Container(
+          alignment: Alignment.center,
           child: new Text(
             widget.active ? 'Active' : 'Inactive',
             style: new TextStyle(fontSize: 32.0, color: Colors.white),
           ),
+          width: 400.0,
+          height: 400.0,
+          decoration: new BoxDecoration(
+              color: widget.active ? Colors.lightGreen[700] : Colors.grey[700],
+              border: _highlight
+                  ? new Border.all(color: Colors.teal[700], width: 100.0)
+                  : null),
         ),
-        width: 200.0,
-        height: 200.0,
-        decoration: new BoxDecoration(
-            color: widget.active ? Colors.lightGreen[700] : Colors.grey[700],
-            border: _highlight
-                ? new Border.all(color: Colors.teal[700], width: 100.0)
-                : null),
       ),
     );
   }
