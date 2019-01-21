@@ -37,6 +37,7 @@ class SearchBarDemoDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
+
     return IconButton(
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
@@ -62,22 +63,22 @@ class SearchBarDemoDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggextionList = query.isEmpty
+    final suggestionList = query.isEmpty
         ? recommendList
         : searchList.where((input) => input.startsWith(query)).toList();
     return ListView.builder(
-      itemCount: suggextionList.length,
+      itemCount: suggestionList.length,
       itemBuilder: (context, index) => ListTile(
             title: RichText(
               text: TextSpan(
-                  text: suggextionList[index].substring(0, query.length),
+                  text: suggestionList[index].substring(0, query.length),
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                   children: [
                     TextSpan(
-                      text: suggextionList[index].substring(query.length),
+                      text: suggestionList[index].substring(query.length),
                       style: TextStyle(
                         color: Colors.grey,
                       ),
